@@ -13,17 +13,17 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<aside id="menu">
-  <div class="marca"><b>Pet Lucrativo</b><small>RendaPrática</small></div>
-  <nav id="nav"></nav>
-</aside>
+<aside id="menu"><div class="marca" role="img" aria-label="Pet Lucrativo — RendaPrática"></div><nav id="nav"></nav></aside>
 <div id="conteudo">
-  <header><button id="btnMenu" aria-label="Abrir menu">☰</button><h1 id="titulo"></h1><button id="btnTema" class="sec peq" type="button"></button></header>
-  <main id="view"></main>
+  <div class="hero" role="img" aria-label="Pet Lucrativo: controle seu pet shop com praticidade e aumente seus lucros"><button id="btnMenu" aria-label="Abrir menu">☰</button><button id="btnTema" class="tema" type="button"></button></div>
+  <section id="painel"><h1 id="titulo"></h1><main id="view"></main></section>
+  <img class="deco deco-cima" src="img/deco_cima.png" alt="" aria-hidden="true">
+  <img class="deco deco-baixo" src="img/deco_baixo.png" alt="" aria-hidden="true">
 </div>
 <dialog id="dlg"></dialog>
 <div id="toasts" aria-live="polite"></div>
 <div id="modal" hidden><div class="caixa"><p id="modalTexto"></p><div class="acoes"><button class="sec" id="modalNao">Cancelar</button><button id="modalSim">Confirmar</button></div></div></div>
+<script src="js/icons.js"></script>
 <script src="js/database.js"></script>
 <script src="js/backup.js"></script>
 <script src="js/configuracoes.js"></script>

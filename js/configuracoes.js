@@ -3,7 +3,7 @@ const Config={
   ID:'oficina',
   async obter(){return(await DB.obter('configuracoes',this.ID))||{id:this.ID}},
   contraste(h){h=(h||'#000000').replace('#','');const[r,g,b]=[0,2,4].map(i=>parseInt(h.substr(i,2),16));return .299*r+.587*g+.114*b>150?'#1b1206':'#ffffff'},
-  async aplicarCor(){const c=await this.obter(),m=c.corPrincipal||'#14532d',d=c.corDestaque||c.corPrincipal||'#16a34a',s=document.documentElement.style;
+  async aplicarCor(){const c=await this.obter(),m=c.corPrincipal||'#025a02',d=c.corDestaque||c.corPrincipal||'#23a617',s=document.documentElement.style;
     s.setProperty('--menu',m);s.setProperty('--menu-texto',this.contraste(m));s.setProperty('--cor',d);s.setProperty('--cor-texto',this.contraste(d))},
   comprimirImagem(arq,max=400,q=.8){ // reduz e comprime antes de salvar
     return new Promise((ok,erro)=>{
@@ -18,8 +18,8 @@ const Config={
     const c=await this.obter(),h=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
     el.innerHTML=`<form id="fCfg" class="card"><h2>Dados do pet shop</h2><div class="grade">`+
       CAMPOS.map(([k,l])=>`<div><label for="${k}">${l}</label><input id="${k}" value="${h(c[k])}"></div>`).join('')+
-      `<div><label for="corPrincipal">Cor principal (menu e cabeçalho dos PDFs)</label><input type="color" id="corPrincipal" value="${c.corPrincipal||'#14532d'}"></div>
-      <div><label for="corDestaque">Cor de destaque (botões)</label><input type="color" id="corDestaque" value="${c.corDestaque||c.corPrincipal||'#16a34a'}"></div>
+      `<div><label for="corPrincipal">Cor principal (menu e cabeçalho dos PDFs)</label><input type="color" id="corPrincipal" value="${c.corPrincipal||'#025a02'}"></div>
+      <div><label for="corDestaque">Cor de destaque (botões)</label><input type="color" id="corDestaque" value="${c.corDestaque||c.corPrincipal||'#23a617'}"></div>
       <div><label for="logo">Logotipo</label><input type="file" id="logo" accept="image/*"><img class="logo-prev" id="prev" alt="Logotipo" ${c.logo?`src="${c.logo}"`:'hidden'}></div></div>
       <div style="margin-top:12px"><label for="pagamento">Informações de pagamento (PIX, conta…)</label><textarea id="pagamento" rows="2">${h(c.pagamento)}</textarea></div>
       <div style="margin-top:12px"><label for="garantia">Política de cancelamento e avisos aos tutores</label><textarea id="garantia" rows="3">${h(c.garantia)}</textarea></div>

@@ -14,16 +14,20 @@ const Dashboard={
     const de=el.querySelector('#de'),ate=el.querySelector('#ate'),p=el.querySelector('#painel'),R=U.R;
     const desenhar=async()=>{
       if(de.value>ate.value){App.toast('A data inicial não pode ser depois da final.',true);return}
-      const[ag,pets,tu,at,ho,vac,prods,sd]=await Promise.all([...['agendamentos','pets','tutores','atendimentos','hospedagens','vacinas','produtos'].map(s=>DB.todos(s)),Estoque.saldos()]),f=await Financeiro.resumo(de.value,ate.value),h=U.hoje();
+      const[ag,pets,tu,at,ho,vac,prods,pk,sd]=await Promise.all([...['agendamentos','pets','tutores','atendimentos','hospedagens','vacinas','produtos','pacotesClientes'].map(s=>DB.todos(s)),Estoque.saldos()]),f=await Financeiro.resumo(de.value,ate.value),h=U.hoje();
       const np=Object.fromEntries(pets.map(x=>[x.id,x])),nt=Object.fromEntries(tu.map(t=>[t.id,t.nome])),hoje=ag.filter(a=>a.data===h&&Agenda.ATIVOS.includes(a.status)),
         prox=ag.filter(a=>Agenda.ATIVOS.includes(a.status)&&(a.data>h||(a.data===h&&a.hora>=new Date().toTimeString().slice(0,5)))).sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora))[0];
       const pend=Vacinas.pendencias(vac,h,30),venc=pend.filter(x=>x.situacao==='Vencida').length,baixo=prods.filter(x=>(sd[x.id]||0)<=(+x.minimo||0)),mes=h.slice(5,7);
       const aniv=pets.filter(x=>x.nascimento&&x.nascimento.slice(5,7)===mes).sort((a,b)=>a.nascimento.slice(8).localeCompare(b.nascimento.slice(8)));
       const per=at.filter(a=>a.data>=de.value&&a.data<=ate.value),cont={};per.forEach(a=>a.itens.forEach(i=>cont[i.nome]=(cont[i.nome]||0)+1));const top=Object.entries(cont).sort((a,b)=>b[1]-a[1]).slice(0,6);
-      const M=(t,v)=>`<div class="card metrica"><small>${t}</small><div class="total-os">${v}</div></div>`;
-      p.innerHTML=`<div class="grade">${M('Atendimentos hoje',hoje.length)}${M('Próximo horário',prox?`${prox.hora}${prox.data!==h?' ('+U.data(prox.data).slice(0,5)+')':''} · ${UI.h((np[prox.petId]||{}).nome||'')}`:'—')}${M('Hospedados agora',ho.filter(x=>x.status==='Hospedado').length)}${M('Vacinas vencidas',venc)}${M('Vacinas a vencer (30 dias)',pend.length-venc)}${M('Produtos com estoque baixo',baixo.length)}
-        ${M('Receita no período',R(f.receita))}${M('Despesas pagas',R(f.despesas))}${M('Lucro estimado',R(f.lucro))}${M('Ticket médio (banho e tosa)',R(f.qtd?f.atend/f.qtd:0))}${M('Pets cadastrados',pets.length)}</div>
-        <div class="card"><h2>Receita x despesas — últimos 6 meses</h2><div class="graf" id="g1"></div></div>
+      const M=(t,v,i)=>i?`<div class="card metrica ico"><div class="mi">${Ico(i,46)}</div><div class="mt"><small>${t}</small><div class="total-os">${v}</div></div></div>`:`<div class="card metrica"><small>${t}</small><div class="total-os">${v}</div></div>`;
+      const pv=pk.filter(x=>x.sessoesUsadas<x.sessoesTotal&&x.validade<h).length;
+      p.innerHTML=`<div class="grade">${M('Atendimentos hoje',hoje.length,'paw')}${M('Próximo horário',prox?`${prox.hora}${prox.data!==h?' ('+U.data(prox.data).slice(0,5)+')':''} · ${UI.h((np[prox.petId]||{}).nome||'')}`:'—','clock')}${M('Hospedados agora',ho.filter(x=>x.status==='Hospedado').length,'bed')}
+        ${M('Pacotes de banho vencidos',pv,'bath')}${M('Vacinas a vencer (30 dias)',pend.length,'syringe')}${M('Produtos com estoque baixo',baixo.length,'box')}
+        ${M('Receita no período',R(f.receita),'cart')}${M('Despesas pagas',R(f.despesas),'wallet')}${M('Lucro estimado',R(f.lucro),'trend')}
+        </div>
+        <div class="grade" style="margin-top:16px">${M('Ticket médio (banho e tosa)',R(f.qtd?f.atend/f.qtd:0))}${M('Pets cadastrados',pets.length)}${M('Vacinas vencidas',venc)}</div>
+        <div class="card" style="margin-top:16px"><h2>Receita x despesas — últimos 6 meses</h2><div class="graf" id="g1"></div></div>
         <div class="card"><h2>Serviços mais realizados no período</h2><div class="graf" id="g2"></div></div>
         <div class="card"><h2>Lembretes de vacina</h2>${UI.tabela(['Pet','Vacina','Próxima dose','Situação'],pend.slice(0,6).map(x=>[UI.h((np[x.petId]||{}).nome||'—')+`<br><small>${UI.h(nt[(np[x.petId]||{}).tutorId]||'')}</small>`,UI.h(x.tipo),U.data(x.proximaDose),`<span class="${x.situacao==='Vencida'?'atraso':''}">${x.situacao}</span>`]),'Tudo em dia!')}<p><a href="#vacinas">Ver todos os lembretes</a></p></div>
         <div class="card"><h2>Aniversário dos pets neste mês</h2>${aniv.length?aniv.map(x=>`<span class="pill">${U.data(x.nascimento).slice(0,5)} · ${UI.h(x.nome)}</span> `).join(''):'<p class="vazio">Nenhum aniversariante neste mês.</p>'}</div>

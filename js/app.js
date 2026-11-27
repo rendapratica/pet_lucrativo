@@ -22,7 +22,7 @@ const App={
     const f=v=>{m.hidden=true;ok(v)};document.getElementById('modalSim').onclick=()=>f(true);document.getElementById('modalNao').onclick=()=>f(false)})},
   ir(id){
     const t=this.telas.find(x=>x.id===id)||this.telas[0];
-    document.getElementById('titulo').textContent=t.nome;
+    document.getElementById('titulo').innerHTML=Ico(Ico.tela[t.id]||'home',34)+'<span>'+t.nome+'</span>';
     document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('ativo',a.dataset.id===t.id));
     document.getElementById('menu').classList.remove('aberto');
     Promise.resolve(t.render(document.getElementById('view'))).catch(e=>this.toast(e.message,true));
@@ -60,13 +60,13 @@ const App={
       b.onclick=()=>Backup.csv(k).catch(x=>this.toast(x.message,true));el.querySelector('#csvs').appendChild(b)}
   },
   async iniciar(){
-    const btn=document.getElementById('btnTema'),rot=()=>{btn.textContent=document.documentElement.dataset.tema==='escuro'?'☀ Tema claro':'☾ Tema escuro'};
+    const btn=document.getElementById('btnTema'),rot=()=>{btn.innerHTML=document.documentElement.dataset.tema==='escuro'?Ico('sun',18)+' Tema claro':Ico('moon',18)+' Tema escuro'};
     btn.onclick=()=>{const n=document.documentElement.dataset.tema==='escuro'?'claro':'escuro';document.documentElement.dataset.tema=n;try{localStorage.setItem('pet_tema',n)}catch(e){}rot()};rot();
     try{await DB.abrir();if(navigator.storage?.persist)navigator.storage.persist()}
     catch(e){document.getElementById('view').innerHTML='<div class="aviso">Não foi possível abrir o armazenamento local. Verifique se o navegador permite IndexedDB (não use aba anônima).</div>';return}
     await Config.aplicarCor();
     const nav=document.getElementById('nav');
-    this.telas.forEach(t=>{const a=document.createElement('a');a.textContent=t.nome;a.dataset.id=t.id;a.tabIndex=0;a.onclick=()=>{location.hash=t.id};
+    this.telas.forEach(t=>{const a=document.createElement('a');a.innerHTML=Ico(Ico.tela[t.id]||'home',22)+'<span>'+t.nome+'</span>';a.dataset.id=t.id;a.tabIndex=0;a.onclick=()=>{location.hash=t.id};
       a.onkeydown=e=>{if(e.key==='Enter')a.click()};nav.appendChild(a)});
     document.getElementById('btnMenu').onclick=()=>document.getElementById('menu').classList.toggle('aberto');
     window.onhashchange=()=>this.ir(location.hash.slice(1));
