@@ -1,0 +1,11 @@
+# Roteiro de testes — Pet Lucrativo
+- [ ] Configurações: dados do pet shop, logo e cores; fechar e abrir (dados continuam).
+- [ ] Serviços e preços: banho, tosa higiênica e tosa completa com preços por porte.
+- [ ] Tutores e pets: cadastrar um tutor e dois pets (portes diferentes).
+- [ ] Agenda: marcar horário, WhatsApp de lembrete, "Atender" e conferir o preço pelo porte e as fotos.
+- [ ] Pacotes de banho: criar, vender para um pet, usar uma sessão e ver o saldo; excluir o atendimento e ver a sessão voltar.
+- [ ] Vacinas: registrar (a próxima dose é sugerida), ver em Lembretes quando perto de vencer e enviar WhatsApp.
+- [ ] Hotel e creche: reserva, check-in (status Hospedado) e check-out com extras; conferir o valor no Financeiro.
+- [ ] Produtos e estoque: entrada, venda da loja (baixa no estoque) e excluir a venda (volta ao estoque).
+- [ ] Financeiro e Relatórios: receita por origem, custo dos produtos, lucro, CSV.
+- [ ] Backup: exportar, apagar um pet, restaurar. Offline: carregar, desligar a internet e recarregar.

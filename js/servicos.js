@@ -1,0 +1,7 @@
+const Servicos={render(el){Crud.tela(el,{store:'servicos',novo:'Novo serviço',vazio:'Nenhum serviço cadastrado. Ex.: Banho, Tosa higiênica, Tosa completa, Hidratação.',colunas:['Serviço','Duração','Pequeno','Médio','Grande'],
+  busca:r=>r.nome,linha:r=>[`<b>${UI.h(r.nome)}</b>${r.ativo==='Não'?' <small class="atraso">indisponível</small>':''}`,r.duracao+' min',U.R(r.precoP),U.R(r.precoM),U.R(r.precoG)],
+  campos:[{k:'nome',l:'Nome do serviço',req:1,wide:1},{k:'duracao',l:'Duração (min)',type:'number',req:1},{k:'ativo',l:'Disponível',t:'select',opts:[['Sim','Sim'],['Não','Não']]},{k:'precoP',l:'Preço — porte pequeno (R$)',type:'number',req:1},{k:'precoM',l:'Preço — porte médio (R$)',type:'number',req:1},{k:'precoG',l:'Preço — porte grande (R$)',type:'number',req:1}],
+  padrao:{duracao:60,ativo:'Sim'},
+  salvar:async(v,r)=>{const d=Math.round(+v.duracao),p=[+v.precoP,+v.precoM,+v.precoG];if(!(d>0&&d<=720))throw new Error('A duração deve ficar entre 1 e 720 minutos.');if(p.some(x=>!(x>=0)))throw new Error('Confira os preços.');
+    if((await DB.todos('servicos')).some(x=>x.id!==r.id&&UI.norm(x.nome)===UI.norm(v.nome)))throw new Error('Já existe um serviço com este nome.');return{nome:v.nome,duracao:d,ativo:v.ativo,precoP:p[0],precoM:p[1],precoG:p[2]}},
+  bloqueio:async r=>(await DB.todos('pacotes')).some(p=>p.servicoId===r.id)?'Este serviço faz parte de um pacote. Remova o pacote antes.':''})}};
